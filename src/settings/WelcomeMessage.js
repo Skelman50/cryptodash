@@ -6,7 +6,6 @@ import { AppContext } from "../context/app/appContext";
 const WelcomeMessage = () => {
   const appContext = useContext(AppContext);
   const { firstVisit, saveSettings } = appContext;
-  console.log(firstVisit);
   useEffect(() => {
     saveSettings();
   }, [saveSettings]);
