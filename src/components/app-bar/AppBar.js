@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
+import { AppContext } from "../../context/app/appContext";
 
 const Bar = styled.div`
   display: grid;
@@ -17,12 +18,18 @@ const ControlButtomElement = styled.div`
     props.active &&
     css`
       text-shadow: 0px 0px 60px #03ff03;
+      color: red;
     `}
 `;
 
-function ControlButton({ name, active }) {
+function ControlButton({ name }) {
+  const appContext = useContext(AppContext);
+  const { page, changePage } = appContext;
   return (
-    <ControlButtomElement active={active}>
+    <ControlButtomElement
+      active={page === name}
+      onClick={() => changePage(name)}
+    >
       {toProperCase(name)}
     </ControlButtomElement>
   );
@@ -37,7 +44,7 @@ const AppBar = () => {
     <Bar>
       <Logo>CryptoDash</Logo>
       <div />
-      <ControlButton name="dashboard" active />
+      <ControlButton name="dashboard" />
       <ControlButton name="settings" />
     </Bar>
   );
