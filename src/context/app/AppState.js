@@ -5,17 +5,9 @@ import { AppContext } from "./appContext";
 const AppState = props => {
   const [page, setPage] = useState("dashboard");
   const [firstVisit, setFirstVisit] = useState(true);
-  const [coins, setCoins] = useState([]);
+  const [coins, setCoins] = useState(null);
   const changePage = page => setPage(page);
-  const saveSettings = () => {
-    let cryptoDashData = JSON.parse(localStorage.getItem("cryptoDash"));
-    if (!cryptoDashData) {
-      setPage("settings");
-      setFirstVisit(true);
-    } else {
-      setFirstVisit(false);
-    }
-  };
+
   const confirmFavorites = () => {
     setFirstVisit(false);
     setPage("dashboard");
@@ -27,6 +19,16 @@ const AppState = props => {
       const coinList = (await cc.coinList()).Data;
       setCoins(coinList);
     };
+    const saveSettings = () => {
+      let cryptoDashData = JSON.parse(localStorage.getItem("cryptoDash"));
+      if (!cryptoDashData) {
+        setPage("settings");
+        setFirstVisit(true);
+      } else {
+        setFirstVisit(false);
+      }
+    };
+    saveSettings();
     fetchCoinsList();
   }, []);
 
@@ -35,7 +37,6 @@ const AppState = props => {
       value={{
         page,
         changePage,
-        saveSettings,
         firstVisit,
         confirmFavorites,
         coins

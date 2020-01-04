@@ -1,23 +1,24 @@
-import React, { Fragment, useContext, useEffect } from "react";
-import { Welcome } from "../components/ui/WelcomeMessage";
+import React, { useContext } from "react";
+import { Welcome } from "../ui/WelcomeMessage";
 import ConfirmButton from "./ConfirmButton";
-import { AppContext } from "../context/app/appContext";
+import { AppContext } from "../../context/app/appContext";
+import Page from "../page/Page";
+import CoinGrid from "../coin-grid/CoinGrid";
 
 const WelcomeMessage = () => {
   const appContext = useContext(AppContext);
-  const { firstVisit, saveSettings } = appContext;
-  useEffect(() => {
-    saveSettings();
-  }, [saveSettings]);
+  const { firstVisit } = appContext;
+
   return (
-    <Fragment>
+    <Page name="settings">
       {firstVisit && (
         <Welcome>
           Hello from cryptodashboard. Please enter your favorit coin!
         </Welcome>
       )}
       <ConfirmButton />
-    </Fragment>
+      <CoinGrid />
+    </Page>
   );
 };
 
