@@ -16,6 +16,7 @@ const WelcomeMessage = () => {
           Hello from cryptodashboard. Please enter your favorit coin!
         </Welcome>
       )}
+      <CoinGrid topSection />
       <ConfirmButton />
       <CoinGrid />
     </Page>
