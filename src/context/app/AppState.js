@@ -11,12 +11,29 @@ const AppState = props => {
   const [favorites, setFavorites] = useState([]);
   const [filteredCoins, setFilteredCoins] = useState(null);
   const [prices, setPrices] = useState(null);
+  const [currentFavorite, setCurrentFavorite] = useState(null);
   const changePage = page => setPage(page);
 
   const confirmFavorites = () => {
     setFirstVisit(false);
-    localStorage.setItem("cryptoDash", JSON.stringify({ favorites }));
+    const currentFavorite = favorites[favorites.length - 1];
+    localStorage.setItem(
+      "cryptoDash",
+      JSON.stringify({ favorites, currentFavorite })
+    );
+    setCurrentFavorite(currentFavorite);
     setPage("dashboard");
+  };
+
+  const changeCurrenFavorite = sym => {
+    setCurrentFavorite(sym);
+    localStorage.setItem(
+      "cryptoDash",
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem("cryptoDash")),
+        currentFavorite: sym
+      })
+    );
   };
 
   const addCoin = key => {
@@ -42,7 +59,7 @@ const AppState = props => {
     if (firstVisit) return;
     const prices = [];
     const cryptoDashData = JSON.parse(localStorage.getItem("cryptoDash"));
-    if (!cryptoDashData) return;
+    if (!cryptoDashData.favorites) return;
     setPrices(null);
     const favorites = cryptoDashData.favorites;
     for (let i = 0; i < favorites.length; i++) {
@@ -68,6 +85,7 @@ const AppState = props => {
     } else {
       setFirstVisit(false);
       setFavorites(cryptoDashData.favorites);
+      setCurrentFavorite(cryptoDashData.currentFavorite);
     }
   };
 
@@ -97,7 +115,9 @@ const AppState = props => {
         isFavorites,
         filteredCoins,
         changeFilteredCoins,
-        prices
+        prices,
+        currentFavorite,
+        changeCurrenFavorite
       }}
     >
       {props.children}
