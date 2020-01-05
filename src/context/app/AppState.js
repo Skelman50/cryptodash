@@ -2,17 +2,34 @@ import React, { useState, useEffect } from "react";
 import cc from "cryptocompare";
 import { AppContext } from "./appContext";
 
+const MAX_FAVORITES = 10;
+
 const AppState = props => {
   const [page, setPage] = useState("dashboard");
   const [firstVisit, setFirstVisit] = useState(true);
   const [coins, setCoins] = useState(null);
+  const [favorites, setFavorites] = useState(["BTC", "ETH", "XMR", "DOGE"]);
   const changePage = page => setPage(page);
 
   const confirmFavorites = () => {
     setFirstVisit(false);
-    setPage("dashboard");
-    localStorage.setItem("cryptoDash", JSON.stringify({ test: "hello" }));
+    localStorage.setItem("cryptoDash", JSON.stringify({ favorites }));
   };
+
+  const addCoin = key => {
+    const favorites_ = [...favorites];
+    if (favorites_.length < MAX_FAVORITES) {
+      favorites_.push(key);
+      setFavorites(favorites_);
+    }
+  };
+
+  const removeCoin = key => {
+    const favorites_ = favorites.filter(f => f !== key);
+    setFavorites(favorites_);
+  };
+
+  const isFavorites = key => favorites.includes(key);
 
   useEffect(() => {
     const fetchCoinsList = async () => {
@@ -26,6 +43,7 @@ const AppState = props => {
         setFirstVisit(true);
       } else {
         setFirstVisit(false);
+        setFavorites(cryptoDashData.favorites);
       }
     };
     saveSettings();
@@ -39,7 +57,11 @@ const AppState = props => {
         changePage,
         firstVisit,
         confirmFavorites,
-        coins
+        coins,
+        favorites,
+        addCoin,
+        removeCoin,
+        isFavorites
       }}
     >
       {props.children}
