@@ -6,15 +6,17 @@ const MAX_FAVORITES = 10;
 
 const AppState = props => {
   const [page, setPage] = useState("dashboard");
-  const [firstVisit, setFirstVisit] = useState(true);
+  const [firstVisit, setFirstVisit] = useState(false);
   const [coins, setCoins] = useState(null);
-  const [favorites, setFavorites] = useState(["BTC", "ETH", "XMR", "DOGE"]);
+  const [favorites, setFavorites] = useState([]);
   const [filteredCoins, setFilteredCoins] = useState(null);
+  const [prices, setPrices] = useState(null);
   const changePage = page => setPage(page);
 
   const confirmFavorites = () => {
     setFirstVisit(false);
     localStorage.setItem("cryptoDash", JSON.stringify({ favorites }));
+    setPage("dashboard");
   };
 
   const addCoin = key => {
@@ -36,21 +38,47 @@ const AppState = props => {
     setFilteredCoins(filteredCoins);
   };
 
-  useEffect(() => {
-    const fetchCoinsList = async () => {
-      const coinList = (await cc.coinList()).Data;
-      setCoins(coinList);
-    };
-    const saveSettings = () => {
-      let cryptoDashData = JSON.parse(localStorage.getItem("cryptoDash"));
-      if (!cryptoDashData) {
-        setPage("settings");
-        setFirstVisit(true);
-      } else {
-        setFirstVisit(false);
-        setFavorites(cryptoDashData.favorites);
+  const fetchPrices = async () => {
+    if (firstVisit) return;
+    const prices = [];
+    const cryptoDashData = JSON.parse(localStorage.getItem("cryptoDash"));
+    if (!cryptoDashData) return;
+    setPrices(null);
+    const favorites = cryptoDashData.favorites;
+    for (let i = 0; i < favorites.length; i++) {
+      try {
+        const priceData = await cc.priceFull(favorites[i], "USD");
+        prices.push(priceData);
+      } catch (error) {
+        console.warn(error);
       }
-    };
+    }
+    setPrices(prices);
+  };
+
+  const fetchCoinsList = async () => {
+    const coinList = (await cc.coinList()).Data;
+    setCoins(coinList);
+  };
+  const saveSettings = () => {
+    const cryptoDashData = JSON.parse(localStorage.getItem("cryptoDash"));
+    if (!cryptoDashData) {
+      setPage("settings");
+      setFirstVisit(true);
+    } else {
+      setFirstVisit(false);
+      setFavorites(cryptoDashData.favorites);
+    }
+  };
+
+  useEffect(() => {
+    if (page === "dashboard") {
+      fetchPrices();
+    }
+    // eslint-disable-next-line
+  }, [page]);
+
+  useEffect(() => {
     saveSettings();
     fetchCoinsList();
   }, []);
@@ -68,7 +96,8 @@ const AppState = props => {
         removeCoin,
         isFavorites,
         filteredCoins,
-        changeFilteredCoins
+        changeFilteredCoins,
+        prices
       }}
     >
       {props.children}
