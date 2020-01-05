@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styled, { css } from "styled-components";
-import { AppContext } from "../../context/app/appContext";
+import { AppContext } from "../context/app/appContext";
 
 const Bar = styled.div`
   display: grid;

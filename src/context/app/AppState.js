@@ -9,6 +9,7 @@ const AppState = props => {
   const [firstVisit, setFirstVisit] = useState(true);
   const [coins, setCoins] = useState(null);
   const [favorites, setFavorites] = useState(["BTC", "ETH", "XMR", "DOGE"]);
+  const [filteredCoins, setFilteredCoins] = useState(null);
   const changePage = page => setPage(page);
 
   const confirmFavorites = () => {
@@ -30,6 +31,10 @@ const AppState = props => {
   };
 
   const isFavorites = key => favorites.includes(key);
+
+  const changeFilteredCoins = filteredCoins => {
+    setFilteredCoins(filteredCoins);
+  };
 
   useEffect(() => {
     const fetchCoinsList = async () => {
@@ -61,7 +66,9 @@ const AppState = props => {
         favorites,
         addCoin,
         removeCoin,
-        isFavorites
+        isFavorites,
+        filteredCoins,
+        changeFilteredCoins
       }}
     >
       {props.children}
