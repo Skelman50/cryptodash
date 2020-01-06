@@ -20,15 +20,21 @@ const ControlButtomElement = styled.div`
       text-shadow: 0px 0px 60px #03ff03;
       color: red;
     `}
+  ${props =>
+    props.hidden &&
+    css`
+      display: none;
+    `}
 `;
 
 function ControlButton({ name }) {
   const appContext = useContext(AppContext);
-  const { page, changePage } = appContext;
+  const { page, changePage, firstVisit } = appContext;
   return (
     <ControlButtomElement
       active={page === name}
       onClick={() => changePage(name)}
+      hidden={firstVisit && page === "dashboard"}
     >
       {toProperCase(name)}
     </ControlButtomElement>

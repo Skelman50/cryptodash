@@ -1,4 +1,4 @@
-export default function highChartsConfig() {
+export default function highChartsConfig(historical) {
   return {
     title: {
       text: ""
@@ -7,6 +7,9 @@ export default function highChartsConfig() {
       title: {
         text: "Price"
       }
+    },
+    xAxis: {
+      type: "datetime"
     },
     legend: {
       layout: "vertical",
@@ -23,12 +26,7 @@ export default function highChartsConfig() {
       }
     },
 
-    series: [
-      {
-        name: "Installation",
-        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-      }
-    ],
+    series: historical,
 
     responsive: {
       rules: [
