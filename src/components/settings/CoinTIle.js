@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AppContext } from "../../context/app/appContext";
 import { SelectableTile, DeletableTile, DisableTile } from "../ui/Tile";
 import CoinHeaderGrid from "./CoinHeaderGrid";
-import CoinImage from "./CoinImage";
+import CoinImage from "../shared/CoinImage";
 
 const clickCoinHandler = (topSection, coinKey, addCoin, removeCoin) => {
   return topSection
